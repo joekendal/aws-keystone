@@ -1,35 +1,37 @@
 {
   "name": "aws-keystone",
+  "description": "Serverless deployment of Keystone on AWS",
   "repository": {
     "type": "git",
-    "url": "https://github.com/13680617+joekendal/aws-keystone.git"
+    "url": "https://github.com/nexusmed/aws-keystone.git"
   },
   "scripts": {
-    "clobber": "npx projen clobber",
-    "compile": "npx projen compile",
-    "test:compile": "npx projen test:compile",
-    "test": "npx projen test",
     "build": "npx projen build",
-    "test:watch": "npx projen test:watch",
-    "test:update": "npx projen test:update",
     "bump": "npx projen bump",
-    "unbump": "npx projen unbump",
+    "clobber": "npx projen clobber",
+    "compat": "npx projen compat",
+    "compile": "npx projen compile",
+    "default": "npx projen default",
+    "docgen": "npx projen docgen",
+    "eslint": "npx projen eslint",
+    "package": "npx projen package",
+    "post-compile": "npx projen post-compile",
+    "pre-compile": "npx projen pre-compile",
     "publish:github": "npx projen publish:github",
+    "publish:npm": "npx projen publish:npm",
+    "release": "npx projen release",
+    "test": "npx projen test",
+    "test:update": "npx projen test:update",
+    "test:watch": "npx projen test:watch",
+    "unbump": "npx projen unbump",
     "upgrade": "npx projen upgrade",
     "upgrade-projen": "npx projen upgrade-projen",
-    "default": "npx projen default",
     "watch": "npx projen watch",
-    "package": "npx projen package",
-    "eslint": "npx projen eslint",
-    "compat": "npx projen compat",
-    "publish:npm": "npx projen publish:npm",
-    "docgen": "npx projen docgen",
-    "release": "npx projen release",
     "projen": "npx projen"
   },
   "author": {
-    "name": "joekendal",
-    "email": "13680617+joekendal@users.noreply.github.com",
+    "name": "nexusmed",
+    "email": "open-source@nexusmed.io",
     "organization": false
   },
   "devDependencies": {
@@ -60,10 +62,12 @@
   },
   "bundledDependencies": [],
   "keywords": [
-    "cdk"
+    "aws",
+    "cdk",
+    "keystone"
   ],
   "main": "lib/index.js",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "version": "0.0.0",
   "jest": {
     "testMatch": [
@@ -100,7 +104,7 @@
     "preset": "ts-jest",
     "globals": {
       "ts-jest": {
-        "tsconfig": "tsconfig.jest.json"
+        "tsconfig": "tsconfig.dev.json"
       }
     }
   },
