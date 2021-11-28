@@ -147,6 +147,7 @@ export class Keystone extends cdk.Stack {
           ])
         }
       },
+      healthCheckGracePeriod: cdk.Duration.seconds(60 * 10)
     });
   }
 }

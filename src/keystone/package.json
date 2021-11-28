@@ -6,7 +6,8 @@
     "dev": "keystone-next dev",
     "start": "keystone-next start",
     "build": "keystone-next postinstall --fix && keystone-next build",
-    "postinstall": "test -n \"$SKIP_POSTINSTALL\" || keystone-next postinstall"
+    "postinstall": "test -n \"$SKIP_POSTINSTALL\" || keystone-next postinstall",
+    "deploy": "yarn build && keystone-next prisma migrate deploy"
   },
   "dependencies": {
     "@keystone-next/auth": "^36.0.0",

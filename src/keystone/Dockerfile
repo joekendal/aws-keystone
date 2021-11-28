@@ -15,4 +15,4 @@ COPY schema.ts schema.ts
 COPY auth.ts auth.ts
 COPY --from=dependencies /app/node_modules node_modules
 EXPOSE 3000
-CMD yarn build && yarn start
+CMD yarn deploy && yarn start

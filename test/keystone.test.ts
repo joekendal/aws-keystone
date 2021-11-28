@@ -3,7 +3,7 @@ import * as cdk from '@aws-cdk/core';
 
 import { Keystone, KeystoneProps } from '../src/main';
 
-describe('Fargate', () => {
+describe('should create ALB Fargate', () => {
   let app: cdk.App;
   let template: Template;
   const props: KeystoneProps = {
@@ -93,5 +93,8 @@ describe('Fargate', () => {
 
   });
 
-
 });
+
+describe('should create Aurora', () => {
+
+})
