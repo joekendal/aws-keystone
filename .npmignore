@@ -3,8 +3,6 @@
 /test-reports/
 junit.xml
 /coverage/
-/dist/changelog.md
-/dist/version.txt
 /.mergify.yml
 /test/
 /tsconfig.dev.json
@@ -20,4 +18,6 @@ dist
 /.projenrc.js
 tsconfig.tsbuildinfo
 /.eslintrc.json
-!.jsii
+cdk.out/
+.cdk.staging/
+cdk.context.json

@@ -22,6 +22,11 @@
       "type": "build"
     },
     {
+      "name": "aws-cdk",
+      "version": "^1.134.0",
+      "type": "build"
+    },
+    {
       "name": "eslint",
       "type": "build"
     },
@@ -47,22 +52,6 @@
       "type": "build"
     },
     {
-      "name": "jsii",
-      "type": "build"
-    },
-    {
-      "name": "jsii-diff",
-      "type": "build"
-    },
-    {
-      "name": "jsii-docgen",
-      "type": "build"
-    },
-    {
-      "name": "jsii-pacmak",
-      "type": "build"
-    },
-    {
       "name": "json-schema",
       "type": "build"
     },
@@ -76,12 +65,12 @@
       "type": "build"
     },
     {
-      "name": "standard-version",
-      "version": "^9",
+      "name": "ts-jest",
       "type": "build"
     },
     {
-      "name": "ts-jest",
+      "name": "ts-node",
+      "version": "^9",
       "type": "build"
     },
     {
@@ -89,12 +78,16 @@
       "type": "build"
     },
     {
-      "name": "constructs",
-      "version": "^3.2.27",
-      "type": "peer"
+      "name": "@aws-cdk/assert",
+      "version": "^1.134.0",
+      "type": "runtime"
     },
     {
       "name": "@aws-cdk/aws-ec2",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-cdk/aws-ecr-assets",
       "type": "runtime"
     },
     {
@@ -107,6 +100,7 @@
     },
     {
       "name": "@aws-cdk/core",
+      "version": "^1.134.0",
       "type": "runtime"
     }
   ],

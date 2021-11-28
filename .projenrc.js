@@ -1,5 +1,5 @@
-const { AwsCdkConstructLibrary, NpmAccess } = require('projen');
-const project = new AwsCdkConstructLibrary({
+const { AwsCdkTypeScriptApp, NpmAccess } = require('projen');
+const project = new AwsCdkTypeScriptApp({
   author: 'nexusmed',
   authorAddress: 'open-source@nexusmed.io',
   cdkVersion: '1.134.0',
@@ -9,6 +9,7 @@ const project = new AwsCdkConstructLibrary({
   prerelease: 'alpha',
   codeCov: true,
   license: 'MIT',
+  copyrightOwner: 'NexusMed',
   devContainer: true,
   keywords: ['cdk', 'keystone', 'aws'],
   packageName: 'aws-keystone',
@@ -20,10 +21,11 @@ const project = new AwsCdkConstructLibrary({
     '@aws-cdk/aws-ecs',
     '@aws-cdk/aws-ec2',
     '@aws-cdk/aws-ecs-patterns',
-  ],
-  devDeps: [
-    '@aws-cdk/assertions',
-  ], /* Build dependencies for this module. */
+    '@aws-cdk/aws-ecr-assets',
+  ],  
+  devDeps: ['@aws-cdk/assertions'], /* Build dependencies for this module. */  
+  gitignore: ['cdk.context.json'],  
   // release: undefined,              /* Add release management to this project. */
 });
+project.addPackageIgnore('cdk.context.json')
 project.synth();

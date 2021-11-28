@@ -1,10 +1,12 @@
+import path from 'path';
 import * as ec2 from '@aws-cdk/aws-ec2';
+import { DockerImageAsset } from '@aws-cdk/aws-ecr-assets';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as ecs_patterns from '@aws-cdk/aws-ecs-patterns';
 import * as cdk from '@aws-cdk/core';
 
 
-export interface KeystoneProps {
+export interface KeystoneProps extends cdk.StackProps {
   /**
    * The number of cpu units used by the task.
    *
@@ -59,28 +61,45 @@ export interface KeystoneProps {
   readonly publicLoadBalancer?: boolean;
 }
 
-export class Keystone extends cdk.Construct {
+export class Keystone extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: KeystoneProps) {
-    super(scope, id);
+    super(scope, id, props);
 
+    const asset = new DockerImageAsset(this, 'KeystoneBuild', {
+      directory: path.join(__dirname, 'keystone'),
+    });
 
     // Default VPC with all 3 AVs in the region
+    const vpc = new ec2.Vpc(this, 'KeystoneVPC', {
+      maxAzs: 3,
+    });
+
+    // ECS cluster
     const cluster = new ecs.Cluster(this, 'KeystoneCluster', {
-      vpc: new ec2.Vpc(this, 'KeystoneVPC', {
-        maxAzs: 3,
-      }),
+      vpc,
     });
 
     // Fargate with load balancer (public)
     new ecs_patterns.ApplicationLoadBalancedFargateService(this, 'KeystoneService', {
       cluster,
-      cpu: props.cpu,
-      desiredCount: props.desiredCount,
-      memoryLimitMiB: props.memoryLimitMiB,
-      publicLoadBalancer: props.publicLoadBalancer,
+      cpu: props?.cpu,
+      desiredCount: props?.desiredCount,
+      memoryLimitMiB: props?.memoryLimitMiB,
+      publicLoadBalancer: props?.publicLoadBalancer,
       taskImageOptions: {
-        image: ecs.ContainerImage.fromRegistry(''),
+        image: ecs.ContainerImage.fromDockerImageAsset(asset),
       },
     });
   }
 }
+
+const app = new cdk.App();
+
+new Keystone(app, 'KeystoneJS', {
+  env: {
+    account: process.env.AWS_ACCOUNT,
+    region: process.env.AWS_REGION
+  }
+});
+
+app.synth();
