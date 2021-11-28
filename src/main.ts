@@ -4,7 +4,7 @@ import { DockerImageAsset } from '@aws-cdk/aws-ecr-assets';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as ecs_patterns from '@aws-cdk/aws-ecs-patterns';
 import * as cdk from '@aws-cdk/core';
-
+import { Secret } from "@aws-cdk/aws-secretsmanager"
 
 export interface KeystoneProps extends cdk.StackProps {
   /**
@@ -17,8 +17,7 @@ export interface KeystoneProps extends cdk.StackProps {
    * 2048 (2 vCPU) - Available memory values: Between 4GB and 16GB in 1GB increments
    * 4096 (4 vCPU) - Available memory values: Between 8GB and 30GB in 1GB increments
    *
-   * This default is set in the underlying FargateTaskDefinition construct.
-   * @default 256
+   * @default 512
    * @stability stable
    */
   readonly cpu?: number;
@@ -35,7 +34,7 @@ export interface KeystoneProps extends cdk.StackProps {
    * Between 8192 (8 GB) and 30720 (30 GB) in increments of 1024 (1 GB) - Available cpu values: 4096 (4 vCPU)
    *
    * This default is set in the underlying FargateTaskDefinition construct.
-   * @default 512
+   * @default 1024
    * @stability stable
    */
   readonly memoryLimitMiB?: number;
@@ -79,15 +78,28 @@ export class Keystone extends cdk.Stack {
       vpc,
     });
 
+    // Session secret
+    const secret = new Secret(this, 'SessionSecret', {
+      secretName: 'KeystoneSession',
+      generateSecretString: {
+        // change as appropriate...
+        passwordLength: 32
+      }
+    })
+
     // Fargate with load balancer (public)
     new ecs_patterns.ApplicationLoadBalancedFargateService(this, 'KeystoneService', {
       cluster,
-      cpu: props?.cpu,
+      cpu: props?.cpu ?? 512,
       desiredCount: props?.desiredCount,
-      memoryLimitMiB: props?.memoryLimitMiB,
+      memoryLimitMiB: props?.memoryLimitMiB ?? 1024,
       publicLoadBalancer: props?.publicLoadBalancer,
       taskImageOptions: {
         image: ecs.ContainerImage.fromDockerImageAsset(asset),
+        containerPort: 3000,
+        secrets: {
+          SESSION_SECRET: ecs.Secret.fromSecretsManager(secret)
+        }
       },
     });
   }
@@ -99,7 +111,7 @@ new Keystone(app, 'KeystoneJS', {
   env: {
     account: process.env.AWS_ACCOUNT,
     region: process.env.AWS_REGION
-  }
+  },
 });
 
 app.synth();
