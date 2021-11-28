@@ -22,10 +22,11 @@ const project = new AwsCdkTypeScriptApp({
     '@aws-cdk/aws-ec2',
     '@aws-cdk/aws-ecs-patterns',
     '@aws-cdk/aws-ecr-assets',
-  ],  
-  devDeps: ['@aws-cdk/assertions'], /* Build dependencies for this module. */  
-  gitignore: ['cdk.context.json'],  
+    '@aws-cdk/aws-secretsmanager'
+  ],
+  devDeps: ['@aws-cdk/assertions'], /* Build dependencies for this module. */
+  gitignore: ['cdk.context.json'],
   // release: undefined,              /* Add release management to this project. */
 });
-project.addPackageIgnore('cdk.context.json')
+project.addPackageIgnore('cdk.context.json');
 project.synth();

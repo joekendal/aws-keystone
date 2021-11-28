@@ -3,8 +3,8 @@ import * as ec2 from '@aws-cdk/aws-ec2';
 import { DockerImageAsset } from '@aws-cdk/aws-ecr-assets';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as ecs_patterns from '@aws-cdk/aws-ecs-patterns';
+import { Secret } from '@aws-cdk/aws-secretsmanager';
 import * as cdk from '@aws-cdk/core';
-import { Secret } from "@aws-cdk/aws-secretsmanager"
 
 export interface KeystoneProps extends cdk.StackProps {
   /**
@@ -83,9 +83,9 @@ export class Keystone extends cdk.Stack {
       secretName: 'KeystoneSession',
       generateSecretString: {
         // change as appropriate...
-        passwordLength: 32
-      }
-    })
+        passwordLength: 32,
+      },
+    });
 
     // Fargate with load balancer (public)
     new ecs_patterns.ApplicationLoadBalancedFargateService(this, 'KeystoneService', {
@@ -98,8 +98,8 @@ export class Keystone extends cdk.Stack {
         image: ecs.ContainerImage.fromDockerImageAsset(asset),
         containerPort: 3000,
         secrets: {
-          SESSION_SECRET: ecs.Secret.fromSecretsManager(secret)
-        }
+          SESSION_SECRET: ecs.Secret.fromSecretsManager(secret),
+        },
       },
     });
   }
@@ -110,7 +110,7 @@ const app = new cdk.App();
 new Keystone(app, 'KeystoneJS', {
   env: {
     account: process.env.AWS_ACCOUNT,
-    region: process.env.AWS_REGION
+    region: process.env.AWS_REGION,
   },
 });
 

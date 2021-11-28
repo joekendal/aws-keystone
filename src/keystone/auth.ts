@@ -19,7 +19,7 @@ let sessionSecret = process.env.SESSION_SECRET;
 if (!sessionSecret) {
   if (process.env.NODE_ENV === 'production') {
     throw new Error(
-      'The SESSION_SECRET environment variable must be set in production'
+      'The SESSION_SECRET environment variable must be set in production',
     );
   } else {
     sessionSecret = '-- DEV COOKIE SECRET; CHANGE ME --';
