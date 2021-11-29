@@ -105,7 +105,9 @@ export class Keystone extends cdk.Stack {
       engine: rds.DatabaseClusterEngine.AURORA_POSTGRESQL,
       parameterGroup: rds.ParameterGroup.fromParameterGroupName(this, 'ParameterGroup', 'default.aurora-postgresql10'),
       vpc,
-      scaling: props.auroraScaling,
+      scaling: props.auroraScaling ?? {
+        autoPause: cdk.Duration.minutes(10)
+      },
       credentials: creds,
       subnetGroup: dbSubnetGroup,
       defaultDatabaseName: dbName,
@@ -143,7 +145,7 @@ export class Keystone extends cdk.Stack {
           DATABASE_URL: cdk.Fn.join("", [
             "postgres://", creds.username, ":", aurora.secret!.secretValueFromJson('password').toString(),
             "@", aurora.clusterEndpoint.hostname, ":", "5432",
-            "/", dbName
+            "/", dbName, "?connect_timeout=300"
           ])
         }
       },

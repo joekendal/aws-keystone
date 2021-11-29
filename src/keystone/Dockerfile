@@ -5,6 +5,15 @@ COPY package.json package.json
 COPY yarn.lock yarn.lock
 RUN SKIP_POSTINSTALL=1 yarn install
 
+FROM node:16-alpine AS dev
+
+WORKDIR /app
+COPY package.json package.json
+COPY tsconfig.json tsconfig.json
+COPY --from=dependencies /app/node_modules node_modules
+ENV DATABASE_URL=postgres://superuser:supersecret@db:5432/keystone
+CMD yarn dev
+
 FROM node:16-alpine AS prod
 
 WORKDIR /app

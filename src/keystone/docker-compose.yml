@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_USER=superuser
+      - POSTGRES_PASSWORD=supersecret
+      - POSTGRES_DB=keystone
+    volumes:
+      - /var/lib/postgresql/data
+  app:
+    build:
+      context: .
+      target: dev
+    restart: on-failure
+    ports:
+      - 3000:3000
+    volumes:
+      - ./schema.ts:/app/schema.ts
+      - ./auth.ts:/app/auth.ts
+      - ./keystone.ts:/app/keystone.ts
+      - ./.keystone:/app/.keystone
+      - ./schema.graphql:/app/schema.graphql
+      - ./schema.prisma:/app/schema.prisma
+      - ./migrations:/app/migrations
