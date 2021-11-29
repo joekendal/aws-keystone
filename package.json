@@ -48,6 +48,7 @@
     "@aws-cdk/aws-ecs": "^1.134.0",
     "@aws-cdk/aws-ecs-patterns": "^1.134.0",
     "@aws-cdk/aws-rds": "^1.134.0",
+    "@aws-cdk/aws-route53-targets": "^1.134.0",
     "@aws-cdk/aws-secretsmanager": "^1.134.0",
     "@aws-cdk/core": "^1.134.0"
   },

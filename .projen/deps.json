@@ -103,6 +103,10 @@
       "type": "runtime"
     },
     {
+      "name": "@aws-cdk/aws-route53-targets",
+      "type": "runtime"
+    },
+    {
       "name": "@aws-cdk/aws-secretsmanager",
       "type": "runtime"
     },

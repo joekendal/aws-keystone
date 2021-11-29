@@ -15,7 +15,7 @@ const project = new AwsCdkTypeScriptApp({
   packageName: 'aws-keystone',
   description: 'Serverless deployment of Keystone on AWS',
   npmAccess: NpmAccess.PUBLIC,
-  cdkAssert: false,
+  cdkAssert: false,   
   deps: [
     '@aws-cdk/core',
     '@aws-cdk/aws-ecs',
@@ -24,9 +24,11 @@ const project = new AwsCdkTypeScriptApp({
     '@aws-cdk/aws-ecr-assets',
     '@aws-cdk/aws-secretsmanager',
     '@aws-cdk/aws-rds',
+    '@aws-cdk/aws-route53-targets'
   ],
   devDeps: ['@aws-cdk/assertions'], /* Build dependencies for this module. */
   gitignore: ['cdk.context.json'],
+  appEntrypoint: '../examples/with-domain.ts'
   // release: undefined,              /* Add release management to this project. */
 });
 project.addPackageIgnore('cdk.context.json');

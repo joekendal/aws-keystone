@@ -47,17 +47,17 @@ describe('should create ALB Fargate', () => {
     });
   });
 
-  test('should map from 80 to 3000', () => {
+  test('should map from 443 to 3000', () => {
     template.hasResourceProperties('AWS::EC2::SecurityGroup', {
       SecurityGroupIngress: Match.arrayWith([Match.objectLike({
         CidrIp: '0.0.0.0/0',
-        FromPort: 80,
+        FromPort: 443,
         IpProtocol: 'tcp',
-        ToPort: 80,
+        ToPort: 443,
       })]),
     });
     template.hasResourceProperties('AWS::ElasticLoadBalancingV2::Listener', {
-      Port: 80,
+      Port: 443,
     });
     template.hasResourceProperties('AWS::ElasticLoadBalancingV2::TargetGroup', {
       Port: 80,
