@@ -30,5 +30,8 @@ export default withAuth(
     },
     lists,
     session,
+    server: {
+      healthCheck: true
+    }
   }),
 );

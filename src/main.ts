@@ -3,9 +3,9 @@ import * as ec2 from '@aws-cdk/aws-ec2';
 import { DockerImageAsset } from '@aws-cdk/aws-ecr-assets';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as ecs_patterns from '@aws-cdk/aws-ecs-patterns';
+import * as rds from '@aws-cdk/aws-rds';
 import { Secret } from '@aws-cdk/aws-secretsmanager';
 import * as cdk from '@aws-cdk/core';
-import * as rds from '@aws-cdk/aws-rds'
 
 
 export interface KeystoneProps extends cdk.StackProps {
@@ -83,36 +83,36 @@ export class Keystone extends cdk.Stack {
       subnetConfiguration: [
         { name: 'elb_public_', subnetType: ec2.SubnetType.PUBLIC },
         { name: 'ecs_private_', subnetType: ec2.SubnetType.PRIVATE_WITH_NAT },
-        { name: 'aurora_isolated_', subnetType: ec2.SubnetType.PRIVATE_ISOLATED }
-      ]
+        { name: 'aurora_isolated_', subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
+      ],
     });
 
-    const dbName = 'keystone'
+    const dbName = 'keystone';
     const dbSubnetGroup = new rds.SubnetGroup(this, 'AuroraSubnetGroup', {
       description: 'Subnet group to access Aurora',
       vpcSubnets: { subnets: vpc.isolatedSubnets },
-      vpc
-    })
-    const dbClusterSg = new ec2.SecurityGroup(this, 'DbClusterSg', { vpc })
+      vpc,
+    });
+    const dbClusterSg = new ec2.SecurityGroup(this, 'DbClusterSg', { vpc });
     // allow ECS to access Aurora
     vpc.privateSubnets.forEach((subnet) => {
-      dbClusterSg.addIngressRule(ec2.Peer.ipv4(subnet.ipv4CidrBlock), ec2.Port.tcp(5432))
-    })
+      dbClusterSg.addIngressRule(ec2.Peer.ipv4(subnet.ipv4CidrBlock), ec2.Port.tcp(5432));
+    });
 
     // RDS cluster
-    const creds = rds.Credentials.fromGeneratedSecret('keystone')
+    const creds = rds.Credentials.fromGeneratedSecret('keystone');
     const aurora = new rds.ServerlessCluster(this, 'KeystoneDatabase', {
       engine: rds.DatabaseClusterEngine.AURORA_POSTGRESQL,
       parameterGroup: rds.ParameterGroup.fromParameterGroupName(this, 'ParameterGroup', 'default.aurora-postgresql10'),
       vpc,
       scaling: props.auroraScaling ?? {
-        autoPause: cdk.Duration.minutes(10)
+        autoPause: cdk.Duration.minutes(10),
       },
       credentials: creds,
       subnetGroup: dbSubnetGroup,
       defaultDatabaseName: dbName,
       securityGroups: [dbClusterSg],
-    })
+    });
 
     // ECS cluster
     const cluster = new ecs.Cluster(this, 'KeystoneCluster', {
@@ -129,7 +129,7 @@ export class Keystone extends cdk.Stack {
     });
 
     // Fargate with load balancer (public)
-    new ecs_patterns.ApplicationLoadBalancedFargateService(this, 'KeystoneService', {
+    const fargate = new ecs_patterns.ApplicationLoadBalancedFargateService(this, 'KeystoneService', {
       cluster,
       cpu: props?.cpu ?? 512,
       desiredCount: props?.desiredCount,
@@ -139,18 +139,24 @@ export class Keystone extends cdk.Stack {
         image: ecs.ContainerImage.fromDockerImageAsset(asset),
         containerPort: 3000,
         secrets: {
+          // required by keystone
           SESSION_SECRET: ecs.Secret.fromSecretsManager(secret),
         },
         environment: {
-          DATABASE_URL: cdk.Fn.join("", [
-            "postgres://", creds.username, ":", aurora.secret!.secretValueFromJson('password').toString(),
-            "@", aurora.clusterEndpoint.hostname, ":", "5432",
-            "/", dbName, "?connect_timeout=300"
-          ])
-        }
+          // pass in aurora connection url
+          DATABASE_URL: cdk.Fn.join('', [
+            'postgres://', creds.username, ':', aurora.secret!.secretValueFromJson('password').toString(),
+            '@', aurora.clusterEndpoint.hostname, ':', '5432',
+            '/', dbName, '?connect_timeout=300',
+          ]),
+        },
       },
-      healthCheckGracePeriod: cdk.Duration.seconds(60 * 10)
+      healthCheckGracePeriod: cdk.Duration.seconds(300),
     });
+
+    fargate.targetGroup.configureHealthCheck({
+      path: '/_healthcheck',
+    })
   }
 }
 

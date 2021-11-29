@@ -23,7 +23,7 @@ const project = new AwsCdkTypeScriptApp({
     '@aws-cdk/aws-ecs-patterns',
     '@aws-cdk/aws-ecr-assets',
     '@aws-cdk/aws-secretsmanager',
-    '@aws-cdk/aws-rds'
+    '@aws-cdk/aws-rds',
   ],
   devDeps: ['@aws-cdk/assertions'], /* Build dependencies for this module. */
   gitignore: ['cdk.context.json'],

@@ -97,4 +97,4 @@ describe('should create ALB Fargate', () => {
 
 describe('should create Aurora', () => {
 
-})
+});

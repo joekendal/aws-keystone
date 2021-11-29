@@ -506,7 +506,7 @@
     "@aws-cdk/cx-api" "1.134.0"
     constructs "^3.3.69"
 
-"@aws-cdk/aws-rds@*":
+"@aws-cdk/aws-rds@^1.134.0":
   version "1.134.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-rds/-/aws-rds-1.134.0.tgz#c5096e8b0741587826ba4d3f281a359f0055872d"
   integrity sha512-Z9hSZoImG8O6M4fFU6kicu/jeec4TH6fkIlSE7oJ+cElf+LiRn/djnbqK49nNvzAcuHRii7StOIHwSHOo4x9hw==
@@ -588,7 +588,7 @@
     "@aws-cdk/core" "1.134.0"
     constructs "^3.3.69"
 
-"@aws-cdk/aws-secretsmanager@*", "@aws-cdk/aws-secretsmanager@1.134.0":
+"@aws-cdk/aws-secretsmanager@1.134.0", "@aws-cdk/aws-secretsmanager@^1.134.0":
   version "1.134.0"
   resolved "https://registry.npmjs.org/@aws-cdk/aws-secretsmanager/-/aws-secretsmanager-1.134.0.tgz"
   integrity sha512-34s7VwnvONqlJUiuyH+eK3V6Lp3rzl7HEzWdL3+ToOSq9jc6/MoZ6lu8fe5xMrwVYGRz9dlHwqMjejktENLdZg==
