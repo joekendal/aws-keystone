@@ -22,6 +22,7 @@ COPY tsconfig.json tsconfig.json
 COPY keystone.ts keystone.ts
 COPY schema.ts schema.ts
 COPY auth.ts auth.ts
+COPY migrations migrations
 COPY --from=dependencies /app/node_modules node_modules
 EXPOSE 3000
 CMD yarn deploy && yarn start
